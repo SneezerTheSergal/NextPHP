@@ -2,6 +2,8 @@
 
 namespace classes;
 
+use mysql_xdevapi\Exception;
+
 class merp
 {
     public static function main($args) {
@@ -15,9 +17,25 @@ class merp
         }
     }
     public static function runFile($path){
-
+        try {
+            $bytes = file_get_contents($path);
+            self::run($bytes);
+        } catch (Exception $e) {
+            echo "Error reading file" . $e->getMessage() . "\n";
+        }
     }
     public static function runPrompt(){
-
+        try {
+            fgets(STDIN);
+            while (true) {
+                echo "> ";
+                $line = trim(fgets(STDIN));
+                if ($line === "exit") {
+                    break;
+                }
+            }
+        } catch (Exception $e) {
+            echo "Error reading file" . $e->getMessage(). "\n";
+        }
     }
 }
