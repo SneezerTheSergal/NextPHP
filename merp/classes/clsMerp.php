@@ -2,6 +2,8 @@
 
 namespace classes;
 require_once "clsScanner.php";
+
+use http\Message;
 use mysql_xdevapi\Exception;
 
 class clsMerp
@@ -10,7 +12,7 @@ class clsMerp
         if (count($args) > 1) {
             echo "Usage: phpmerp [script]\n"; //this is how you call stuff appearently
             exit(64);
-        } elseif (count($args) === 1) {
+        } elseif (count($args) === 1) { //args = file name, can't be more than 1 at a time.
             self::runFile($args[0]);
         } else {
             self::runPrompt();
@@ -47,5 +49,24 @@ class clsMerp
             echo $token;
         }
 
+    }
+
+    /**
+     * @param int $line
+     * @param string $message
+     * @return void
+     */
+    public static function error($line, $message ) {
+        self::report($line, '', $message);
+    }
+
+    /**
+     * @param int $line
+     * @param string $where
+     * @param string $message
+     */
+    private static function report($line, $where, $message) {
+        echo "[line" . $line . "] ERROR".  $where . ": " . $message;
+        $hadError = true;
     }
 }
