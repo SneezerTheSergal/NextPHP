@@ -20,7 +20,7 @@ class clsScanner
     }
     private function addToken2($type, $literal) {
         $text = substr($this->source, $this->start, $this->current - $this->start);
-        $token = new Token($type, $text, $literal, $this->line);
+        $token = new clsToken($type, $text, $literal, $this->line);
         $this->tokens[] = $token;
     }
     private function isAtEnd(): bool {
@@ -39,6 +39,12 @@ class clsScanner
             return "\0";
         }
         return $this->source[$this->current];
+    }
+    public function peekNext() {
+        if ($this->current + 1 >= strlen($this->source)) {
+            return "\0";
+        }
+        return $this->source[$this->current + 1];
     }
     public function string() {
         while ($this->peek() != '"' && !$this->isAtEnd()) {
