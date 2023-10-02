@@ -1,10 +1,10 @@
 <?php
 
 namespace classes;
-
+require_once "clsScanner.php";
 use mysql_xdevapi\Exception;
 
-class merp
+class clsMerp
 {
     public static function main($args) {
         if (count($args) > 1) {
@@ -37,5 +37,15 @@ class merp
         } catch (Exception $e) {
             echo "Error reading file" . $e->getMessage(). "\n";
         }
+    }
+    private static function run($source) {
+        $clsScanner= new clsScanner($source);
+
+        $tokens[] = $clsScanner->scanTokens();
+
+        foreach ($tokens as $token) {
+            echo $token;
+        }
+
     }
 }
