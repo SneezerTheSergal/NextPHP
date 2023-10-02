@@ -8,6 +8,7 @@ use mysql_xdevapi\Exception;
 
 class clsMerp
 {
+    private static $hadError = false;
     public static function main($args) {
         if (count($args) > 1) {
             echo "Usage: phpmerp [script]\n"; //this is how you call stuff appearently
@@ -22,6 +23,9 @@ class clsMerp
         try {
             $bytes = file_get_contents($path);
             self::run($bytes);
+            if (self::$hadError) {
+                exit(65);
+            }
         } catch (Exception $e) {
             echo "Error reading file" . $e->getMessage() . "\n";
         }
@@ -35,6 +39,8 @@ class clsMerp
                 if ($line === "exit") {
                     break;
                 }
+                self::run($line);
+                self::$hadError = false;
             }
         } catch (Exception $e) {
             echo "Error reading file" . $e->getMessage(). "\n";
@@ -66,7 +72,7 @@ class clsMerp
      * @param string $message
      */
     private static function report($line, $where, $message) {
-        echo "[line" . $line . "] ERROR".  $where . ": " . $message;
-        $hadError = true;
+        fwrite(STDERR, "[line" . $line . "] ERROR".  $where . ": " . $message);
+        self::$hadError = true;
     }
 }
