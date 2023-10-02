@@ -18,6 +18,11 @@ class clsScanner
         $token = new clsToken($type);
         $this->tokens[] = $token;
     }
+    private function addToken2($type, $literal) {
+        $text = substr($this->source, $this->start, $this->current - $this->start);
+        $token = new Token($type, $text, $literal, $this->line);
+        $this->tokens[] = $token;
+    }
     private function isAtEnd(): bool {
         return $this->current >= strlen($this->source);
     }
@@ -50,6 +55,22 @@ class clsScanner
 
         $value = substr($this->source, $this->start + 1, $this->current - 1);
         $this->addToken(clsTokenType::STRING, $value);
+    }
+    public function isDigit($c): bool {
+        return $c >= '0' && $c <= '9';
+    }
+
+    public function number() {
+        while ($this->isDigit($this->peek())) {
+            $this->advance();
+        }
+        if ($this->peek() == "." && $this->isDigit(peekNext())) {
+            $this->advance();
+            while ($this->isDigit($this->peek())) {
+                $this->advance();
+            }
+        }
+        $this->addToken2(clsTokenType::NUMBER, (float) substr($this->source, $this->start, $this->current - $this->start));
     }
     public function __construct($source) {
         $this->$source = $source;
@@ -107,7 +128,12 @@ class clsScanner
             case '"': $this->string();
             break;
             default:
-                clsMain::error($this->line, "AAAAAAAAAAAA WHAT IS THIS CHARACTER");
+                if ($this->isDigit($c)) {
+                    $this->number();
+                } else {
+                    clsMain::error($this->line, "AAAAAAAAAAAA WHAT IS THIS CHARACTER");
+                }
+
                 break;
         }
     }
