@@ -125,6 +125,12 @@ class clsScanner
                     }
                     $this->addToken(clsTokenType::SLASH);
                 } break;
+            case "||":
+                $this->addToken(clsTokenType::OR);
+                break;
+            case "&&":
+                $this->addToken(clsTokenType::AND);
+                break;
             case ' ': break;
             case '\r': break;
             case '\t': break;
