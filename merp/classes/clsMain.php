@@ -6,7 +6,7 @@ require_once "clsScanner.php";
 use http\Message;
 use mysql_xdevapi\Exception;
 
-class clsMerp
+class clsMain
 {
     private static $hadError = false;
     public static function main($args) {
