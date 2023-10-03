@@ -6,11 +6,11 @@ class clsToken
 {
    private $tokenType;
    private string $lexeme; //lexemeeee marioooo
-   private object $literal;
+   private object|null $literal;
    private int $line;
 
 
-   public function token($tokenType, $lexeme, $literal, $line) {
+   public function __construct($tokenType, $lexeme, $literal, $line) {
        $this->tokenType = $tokenType;
        $this->lexeme = $lexeme;
        $this->literal = $literal;

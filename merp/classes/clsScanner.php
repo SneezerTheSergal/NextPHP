@@ -2,9 +2,9 @@
 
 namespace classes;
 use merp\clsMain;
-
 require_once  "clsTokenType.php";
 require_once  "clsToken.php";
+
 class clsScanner
 {
     //variables
@@ -125,12 +125,13 @@ class clsScanner
         ]; // more direct lookup than going through all cases until x word
     }
     // main functions
-    public function scanTokens($line): array {
+    public function scanTokens(): array {
+        $line = $this->line;
         while (!$this->isAtEnd()){
             $this->start = $this->current;
             $this->scanToken();
         }
-        $token = new clsToken("EOF", "", null, $this->line);
+        $token = new clsToken("EOF", "", null, $line);
         $this->tokens[] = $token;
         return $this->tokens;
     }

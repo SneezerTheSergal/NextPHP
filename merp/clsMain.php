@@ -55,10 +55,13 @@ class clsMain
     private static function run($source) {
         $clsScanner= new clsScanner($source);
 
-        $tokens[] = $clsScanner->scanTokens($source);
+        $tokens[] = $clsScanner->scanTokens();
 
         foreach ($tokens as $token) {
-            echo $token;
+            foreach ($token as $tokens) {
+                var_dump($tokens);
+            }
+
         }
 
     }
