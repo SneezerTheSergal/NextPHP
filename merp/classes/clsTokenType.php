@@ -34,7 +34,7 @@ enum clsTokenType
 
     //Keywords -> add all your keywords here
     case  AND ;
-    case  CLASS ;
+    case  eCLASS ;
     case  ELSE ;
     case  FALSE ;
     case  TRUE ;
