@@ -4,16 +4,16 @@ namespace classes;
 require_once  "clsTokenType.php";
 class clsScanner
 {
+    //variables
     private $source;
     private $tokens = [];
+    private $keywords = [];
     private int $start = 0;
     private int $current = 0;
     private int $line = 1;
 //helper functions
 
-    public function advance(): string {
-        return $this->source[$this->current++];
-    }
+    // functions for adding tokens
     public function addToken($type) {
         $token = new clsToken($type);
         $this->tokens[] = $token;
@@ -22,6 +22,10 @@ class clsScanner
         $text = substr($this->source, $this->start, $this->current - $this->start);
         $token = new clsToken($type, $text, $literal, $this->line);
         $this->tokens[] = $token;
+    }
+    // functions for reading chars
+    public function advance(): string {
+        return $this->source[$this->current++];
     }
     private function isAtEnd(): bool {
         return $this->current >= strlen($this->source);
@@ -62,6 +66,7 @@ class clsScanner
         $value = substr($this->source, $this->start + 1, $this->current - 1);
         $this->addToken(clsTokenType::STRING, $value);
     }
+    //functions for numbers:
     public function isDigit($c): bool {
         return $c >= '0' && $c <= '9';
     }
@@ -78,10 +83,45 @@ class clsScanner
         }
         $this->addToken2(clsTokenType::NUMBER, (float) substr($this->source, $this->start, $this->current - $this->start));
     }
+    public function isAlpha($c): bool {
+        return  ($c >= 'a' && $c <= 'z') || ($c >= 'A' && $c <= 'Z') || $c == '_';
+    }
+    public function isAlphaNumeric($c): bool {
+        return $this->isAlpha($c) || $this->isDigit($c);
+    }
+    public function identifier() {
+        while ($this->isAlphaNumeric($this->peek())) {
+            $this->advance();
+        }
+        $text = substr($this->source, $this->start, $this->current - $this->start);
+        $type = $this->scanIsKeyword($text);
+        if ($type == null) {
+            $type = clsTokenType::IDENTIFIER;
+        }
+        $this->addToken($type);
+    }
+    //construction of variables
     public function __construct($source) {
         $this->$source = $source;
+        $this->keywords = [
+            "class" => clsTokenType::eCLASS,
+            "else" => clsTokenType::ELSE,
+            "elseif" => clsTokenType::ELSEIF,
+            "if" => clsTokenType::IF,
+            "while" => clsTokenType::WHILE,
+            "for" => clsTokenType::FOR,
+            "foreach" => clsTokenType::FOREACH,
+            "return" => clsTokenType::RETURN,
+            "fn" => clsTokenType::FN,
+            "pub" => clsTokenType::PUB,
+            "priv" => clsTokenType::PRIV,
+            "null" => clsTokenType::NULL,
+            "let" => clsTokenType::LET,
+            "println" => clsTokenType::PRINT,
+            "this" => clsTokenType::THIS
+        ]; // more direct lookup than going through all cases until x word
     }
-
+    // main functions
     public function scanTokens($line): array {
         while (!$this->isAtEnd()){
             $this->start = $this->current;
@@ -90,6 +130,14 @@ class clsScanner
         $token = new clsToken("EOF", "", null, $this->line);
         $this->tokens[] = $token;
         return $this->tokens;
+    }
+
+    // an array works better for keywords, because it is more direct.
+    public function scanIsKeyword($s): string|null {
+            if (isset($keywords[$s])) {
+                return $keywords;
+            }
+        return null;
     }
 
     public function scanToken(){
@@ -125,12 +173,20 @@ class clsScanner
                     }
                     $this->addToken(clsTokenType::SLASH);
                 } break;
-            case "||":
-                $this->addToken(clsTokenType::OR);
-                break;
-            case "&&":
-                $this->addToken(clsTokenType::AND);
-                break;
+            case "|":
+                if ($this->match('|')) {
+                    while ($this->peek() != "\n" && !$this->isAtEnd()) {
+                        $this->advance();
+                    }
+                    $this->addToken(clsTokenType::OR);
+                }break;
+            case "&":
+                if ($this->match('&')) {
+                    while ($this->peek() != "\n" && !$this->isAtEnd()) {
+                        $this->advance();
+                    }
+                    $this->addToken(clsTokenType::AND);
+                }break;
             case ' ': break;
             case '\r': break;
             case '\t': break;
@@ -142,6 +198,8 @@ class clsScanner
             default:
                 if ($this->isDigit($c)) {
                     $this->number();
+                } elseif ($this->isAlpha($c)) {
+                    $this->identifier();
                 } else {
                     clsMain::error($this->line, "AAAAAAAAAAAA WHAT IS THIS CHARACTER");
                 }
