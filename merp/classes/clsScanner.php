@@ -1,7 +1,10 @@
 <?php
 
 namespace classes;
+use merp\clsMain;
+
 require_once  "clsTokenType.php";
+require_once  "clsToken.php";
 class clsScanner
 {
     //variables
