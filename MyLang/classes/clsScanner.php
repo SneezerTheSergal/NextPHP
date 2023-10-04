@@ -1,7 +1,7 @@
 <?php
 
 namespace classes;
-use merp\clsMain;
+use MyLang\clsMain;
 require_once  "clsTokenType.php";
 require_once  "clsToken.php";
 
