@@ -2,24 +2,31 @@
 
 namespace merp;
 require_once "classes/clsScanner.php";
+require_once "classes/functions.php";
+
 
 use classes\clsScanner;
 use mysql_xdevapi\Exception;
 
 class clsMain
 {
+    const RUN_PATH = "merp/runFiles/";
     private static $hadError = false;
+    public function __construct($fn) { //construct variables
+        $this->fn = $fn;
+    }
     public static function main($args) {
         if (count($args) > 2) {
             echo "Usage: php /merp/merp.php full path to script\n"; //this is how you call stuff appearently
             foreach ($args as $arg) {
-                echo "debug: " . $arg . "\n";
+//                echo "debug: " . $arg . "\n";
+                debug(\DebugModes::ECHO, $arg, null);
             }
-            echo "debug: " . count($args);
+            debug(\DebugModes::COUNT, $args, null);
 
             exit(64);
         } elseif (count($args) === 2) { //args = file name, can't be more than 1 at a time.
-            self::runFile($args[1]);
+            self::runFile(self::RUN_PATH . $args[1]);
         } else {
             self::runPrompt();
         }
@@ -28,7 +35,7 @@ class clsMain
         try {
             $bytes = file_get_contents($path);
             self::run($bytes);
-            echo "file went through";
+            debug(\DebugModes::ECHO, null, "file went through");
             if (self::$hadError) {
                 exit(65);
             }
