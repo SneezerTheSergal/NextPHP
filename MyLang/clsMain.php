@@ -17,7 +17,7 @@ class clsMain
     }
     public static function main($args) {
         if (count($args) > 2) {
-            echo "Usage: php /MyLang/MyLang.php full path to script\n"; //this is how you call stuff appearently
+            echo "Usage: php /MyLang/interpreter.php name of script in runFiles\n"; //this is how you call stuff appearently
             foreach ($args as $arg) {
 //                echo "debug: " . $arg . "\n";
                 debug(\DebugModes::ECHO, $arg, null);
@@ -91,7 +91,7 @@ class clsMain
      * @param string $message
      */
     private static function report($line, $where, $message) {
-        fwrite(STDERR, "[line" . $line . "] ERROR".  $where . ": " . $message);
+        fwrite(STDERR, "[error on line " . $line . "] ERROR".  $where . ": " . $message);
         self::$hadError = true;
     }
 }
