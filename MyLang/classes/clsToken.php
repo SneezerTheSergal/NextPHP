@@ -6,7 +6,7 @@ class clsToken
 {
    private $tokenType;
    private string|null $lexeme; //lexemeeee marioooo
-   private object|null $literal;
+   private mixed $literal;
    private int|null $line;
 
 

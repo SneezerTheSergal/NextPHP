@@ -10,15 +10,42 @@ class clsScanner
     //variables
     private $source;
     private $tokens = [];
-    private $keywords = [];
+    //private $keywords = [];
     private int $start = 0;
     private int $current = 0;
     private int $line = 1;
+
+    const keywords = [
+            "class" => clsTokenType::eCLASS,
+            "else" => clsTokenType::ELSE,
+            "elseif" => clsTokenType::ELSEIF,
+            "if" => clsTokenType::IF,
+            "while" => clsTokenType::WHILE,
+            "for" => clsTokenType::FOR,
+            "foreach" => clsTokenType::FOREACH,
+            "return" => clsTokenType::RETURN,
+            "fn" => clsTokenType::FN,
+            "pub" => clsTokenType::PUB,
+            "priv" => clsTokenType::PRIV,
+            "null" => clsTokenType::NULL,
+            "let" => clsTokenType::LET,
+            "var" => clsTokenType::VAR,
+            "println" => clsTokenType::PRINT,
+            "this" => clsTokenType::THIS
+        ]; // more direct lookup than going through all cases until x word
 //helper functions
 
+//construction of variables
+    public function __construct($source) {
+        $this->source = $source;
+    }
+
     // functions for adding tokens
-    public function addToken($type) {
-        $token = new clsToken($type, null, null, null);
+    public function addToken($type, $literal = null) {
+        if ($literal === null) {
+            $literal = $type;
+        }
+        $token = new clsToken($type, null, $literal, null);
         $this->tokens[] = $token;
     }
     private function addToken2($type, $literal) {
@@ -28,7 +55,6 @@ class clsScanner
     }
     // functions for reading chars
     public function advance(): string {
-        echo $this->source;
         return $this->source[$this->current++];
     }
     private function isAtEnd(): bool {
@@ -104,28 +130,8 @@ class clsScanner
         }
         $this->addToken($type);
     }
-    //construction of variables
-    public function __construct($source) {
-        $this->$source = $source;
-        $this->keywords = [
-            "class" => clsTokenType::eCLASS,
-            "else" => clsTokenType::ELSE,
-            "elseif" => clsTokenType::ELSEIF,
-            "if" => clsTokenType::IF,
-            "while" => clsTokenType::WHILE,
-            "for" => clsTokenType::FOR,
-            "foreach" => clsTokenType::FOREACH,
-            "return" => clsTokenType::RETURN,
-            "fn" => clsTokenType::FN,
-            "pub" => clsTokenType::PUB,
-            "priv" => clsTokenType::PRIV,
-            "null" => clsTokenType::NULL,
-            "let" => clsTokenType::LET,
-            "var" => clsTokenType::VAR,
-            "println" => clsTokenType::PRINT,
-            "this" => clsTokenType::THIS
-        ]; // more direct lookup than going through all cases until x word
-    }
+
+
     // main functions
     public function scanTokens(): array {
         $line = $this->line;
@@ -140,9 +146,9 @@ class clsScanner
     }
 
     // an array works better for keywords, because it is more direct.
-    public function scanIsKeyword($s): string|null {
-            if (isset($keywords[$s])) {
-                return $keywords;
+    public function scanIsKeyword($s): mixed {
+            if (isset(self::keywords[$s])) {
+                return self::keywords[$s];
             }
         return null;
     }
