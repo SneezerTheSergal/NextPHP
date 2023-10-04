@@ -1,6 +1,6 @@
 <?php
 
-namespace merp;
+namespace MyLang;
 require_once "classes/clsScanner.php";
 require_once "classes/functions.php";
 

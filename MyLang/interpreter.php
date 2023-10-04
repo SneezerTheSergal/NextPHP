@@ -1,6 +1,7 @@
 <?php
 require_once "MyLang/clsMain.php";
-//require_once "../tool/GenerateAst.php";
+//require_once "tool/clsGenerateAst.php";
 $fileToRun = $argv;
-merp\clsMain::main($fileToRun);
+MyLang\clsMain::main($fileToRun);
+//tool\GenerateAst::main($argv);
 ?>
