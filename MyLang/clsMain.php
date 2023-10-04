@@ -10,14 +10,14 @@ use mysql_xdevapi\Exception;
 
 class clsMain
 {
-    const RUN_PATH = "merp/runFiles/";
+    const RUN_PATH = "MyLang/runFiles/";
     private static $hadError = false;
     public function __construct($fn) { //construct variables
         $this->fn = $fn;
     }
     public static function main($args) {
         if (count($args) > 2) {
-            echo "Usage: php /merp/merp.php full path to script\n"; //this is how you call stuff appearently
+            echo "Usage: php /MyLang/MyLang.php full path to script\n"; //this is how you call stuff appearently
             foreach ($args as $arg) {
 //                echo "debug: " . $arg . "\n";
                 debug(\DebugModes::ECHO, $arg, null);
@@ -35,7 +35,8 @@ class clsMain
         try {
             $bytes = file_get_contents($path);
             self::run($bytes);
-            debug(\DebugModes::ECHO, null, "file went through");
+            debug(\DebugModes::DUMP, $bytes, null);
+            debug(\DebugModes::ECHO, null, "file went through"); //unnecessarily long debug func
             if (self::$hadError) {
                 exit(65);
             }
@@ -60,9 +61,11 @@ class clsMain
         }
     }
     private static function run($source) {
-        $clsScanner= new clsScanner($source);
-
+        //debug(\DebugModes::DUMP, $source, null);
+        $clsScanner= new clsScanner($source); // source seems to not be given to clsScanner
+        echo " starting the scanning process... \n";
         $tokens[] = $clsScanner->scanTokens();
+        echo " scanned tokens! \n";
 
         foreach ($tokens as $token) {
             foreach ($token as $tokens) {

@@ -49,6 +49,7 @@ enum clsTokenType
     case  RETURN ;
     case  THIS ;
     case  LET ;
+    case  VAR ;
     case  WHILE ;
     case  FOREACH ;
     case  ELSEIF ;

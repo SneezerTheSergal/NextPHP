@@ -18,7 +18,7 @@ class clsScanner
 
     // functions for adding tokens
     public function addToken($type) {
-        $token = new clsToken($type);
+        $token = new clsToken($type, null, null, null);
         $this->tokens[] = $token;
     }
     private function addToken2($type, $literal) {
@@ -28,6 +28,7 @@ class clsScanner
     }
     // functions for reading chars
     public function advance(): string {
+        echo $this->source;
         return $this->source[$this->current++];
     }
     private function isAtEnd(): bool {
@@ -120,6 +121,7 @@ class clsScanner
             "priv" => clsTokenType::PRIV,
             "null" => clsTokenType::NULL,
             "let" => clsTokenType::LET,
+            "var" => clsTokenType::VAR,
             "println" => clsTokenType::PRINT,
             "this" => clsTokenType::THIS
         ]; // more direct lookup than going through all cases until x word
@@ -131,6 +133,7 @@ class clsScanner
             $this->start = $this->current;
             $this->scanToken();
         }
+        echo " the source is --> " . $this->source . " <-- \n";
         $token = new clsToken("EOF", "", null, $line);
         $this->tokens[] = $token;
         return $this->tokens;
@@ -144,9 +147,9 @@ class clsScanner
         return null;
     }
 
-    public function scanToken(){
-        $c = $this->advance();
-        switch ($c) {
+    public function scanToken(): void{
+        $c = $this->advance(); //the function that goes to the next char every time
+        switch ($c) { // the switch where tokens get added
             case "(": $this->addToken(clsTokenType::LEFT_PAREN); break;
             case ")": $this->addToken(clsTokenType::RIGHT_PAREN); break;
             case "{": $this->addToken(clsTokenType::LEFT_BRACE); break;

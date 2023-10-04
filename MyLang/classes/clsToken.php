@@ -5,9 +5,9 @@ require_once "clsTokenType.php";
 class clsToken
 {
    private $tokenType;
-   private string $lexeme; //lexemeeee marioooo
+   private string|null $lexeme; //lexemeeee marioooo
    private object|null $literal;
-   private int $line;
+   private int|null $line;
 
 
    public function __construct($tokenType, $lexeme, $literal, $line) {
