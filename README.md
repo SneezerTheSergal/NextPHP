@@ -5,6 +5,6 @@ this is a WIP, i'm trying to make a programming language with PHP, using: https:
 - even though this is a "very way too early access" thing, i already want to thank some people:
   - Thanks to all people from the fireship discord server, y'all inspired me to do this :D
   - Thanks to my boyfriend, for being great mental support (i will need it lol)
-  - Thanks to Fourthedev, for helping me out whenever i encounter problems of which i don't know how to fix them
+  - Thanks to Alexandros Kaffetzakis (Fourthedev), for helping me out whenever i encounter problems of which i don't know how to fix them
 
 # Manual
