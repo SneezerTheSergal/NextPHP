@@ -139,7 +139,6 @@ class clsScanner
             $this->start = $this->current;
             $this->scanToken();
         }
-        echo " the source is --> " . $this->source . " <-- \n";
         $token = new clsToken("EOF", "", null, $line);
         $this->tokens[] = $token;
         return $this->tokens;
@@ -214,7 +213,7 @@ class clsScanner
                 } elseif ($this->isAlpha($c)) {
                     $this->identifier();
                 } else {
-                    clsMain::error($this->line, "AAAAAAAAAAAA WHAT IS THIS CHARACTER");
+                    clsMain::error($this->line, "undefined character '" . $c . "' \n ");
                 }
 
                 break;
