@@ -1,7 +1,9 @@
 <?php
 
 namespace classes;
-use MyLang\clsMain;
+use NextPHP\clsMain;
+use NextPHP\NPHP;
+
 require_once  "clsTokenType.php";
 require_once  "clsToken.php";
 
@@ -88,7 +90,7 @@ class clsScanner
             }
         }
         if ($this->isAtEnd()) {
-            clsMain::error($this->line, "String must be closed");
+            NPHP::error($this->line, "String must be closed");
         }
 
         $this->advance();
@@ -166,6 +168,7 @@ class clsScanner
             case ";": $this->addToken(clsTokenType::SEMICOLON); break;
             case "*": $this->addToken(clsTokenType::STAR); break;
             case "%": $this->addToken(clsTokenType::MODULO); break;
+            case "$": $this->addToken(clsTokenType::REF); break;
             case "!":
                 $this->addToken($this->match("=") ? clsTokenType::BANG_EQUAL : clsTokenType::BANG );
                 break;
@@ -213,7 +216,7 @@ class clsScanner
                 } elseif ($this->isAlpha($c)) {
                     $this->identifier();
                 } else {
-                    clsMain::error($this->line, "undefined character '" . $c . "' \n ");
+                    NPHP::error($this->line, "undefined character '" . $c . "' \n ");
                 }
 
                 break;

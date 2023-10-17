@@ -53,6 +53,7 @@ enum clsTokenType
     case  WHILE ;
     case  FOREACH ;
     case  ELSEIF ;
+    case REF; // $, will work like & in rust (possibly)
 
     //always last one:
     case  EOF ; //End Of File

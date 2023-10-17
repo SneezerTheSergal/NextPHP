@@ -1,6 +1,6 @@
 <?php
 
-namespace MyLang;
+namespace NextPHP;
 require_once "classes/clsScanner.php";
 require_once "classes/functions.php";
 
@@ -8,14 +8,15 @@ require_once "classes/functions.php";
 use classes\clsScanner;
 use mysql_xdevapi\Exception;
 
-class clsMain
+class NPHP
 {
-    const RUN_PATH = "MyLang/runFiles/";
-    private static $hadError = false;
+    const RUN_PATH = "NextPHP/runFiles/";
+    private static bool $hadError = false;
     public function __construct($fn) { //construct variables
         $this->fn = $fn;
     }
-    public static function main($args) {
+    public static function main($args): void
+    {
         if (count($args) > 2) {
             echo "Usage: php /MyLang/interpreter.php name of script in runFiles\n"; //this is how you call stuff appearently
             foreach ($args as $arg) {
@@ -31,7 +32,8 @@ class clsMain
             self::runPrompt();
         }
     }
-    public static function runFile($path){
+    public static function runFile($path): void
+    {
         try {
             $bytes = file_get_contents($path);
             self::run($bytes);
@@ -44,7 +46,8 @@ class clsMain
             echo "Error reading file" . $e->getMessage() . "\n";
         }
     }
-    public static function runPrompt(){
+    public static function runPrompt(): void
+    {
         try {
             fgets(STDIN);
             while (true) {
@@ -60,7 +63,8 @@ class clsMain
             echo "Error reading file" . $e->getMessage(). "\n";
         }
     }
-    private static function run($source) {
+    private static function run($source): void
+    {
         //debug(\DebugModes::DUMP, $source, null);
         $clsScanner= new clsScanner($source); // source seems to not be given to clsScanner
         echo " starting the scanning process... \n";
@@ -81,7 +85,8 @@ class clsMain
      * @param string $message
      * @return void
      */
-    public static function error($line, $message ) {
+    public static function error(int $line, string $message ): void
+    {
         self::report($line, '', $message);
     }
 
@@ -90,8 +95,9 @@ class clsMain
      * @param string $where
      * @param string $message
      */
-    private static function report($line, $where, $message) {
-        fwrite(STDERR, "[error on line " . $line . "] ERROR".  $where . ": " . $message);
+    private static function report(int $line, string $where, string $message): void
+    {
+        echo "[error on line " . $line . "] ERROR".  $where . ": " . $message;
         self::$hadError = true;
     }
 }
