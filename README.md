@@ -7,4 +7,5 @@ this is a WIP, i'm trying to make a programming language with PHP, using: https:
   - Thanks to my boyfriend, for being great mental support (i will need it lol)
   - Thanks to Alexandros Kaffetzakis (Fourthedev), for helping me out whenever i encounter problems of which i don't know how to fix them
 
-# Manual
+### Description
+NextPHP is a language i started to write as a hobby project. I want to possibly combine features from PHP and Rust for this language, because i like both.
