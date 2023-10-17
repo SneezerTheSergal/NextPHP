@@ -82,12 +82,13 @@ class clsScanner
         }
         return $this->source[$this->current + 1];
     }
-    public function string() {
+    public function string(): void
+    {
         while ($this->peek() != '"' && !$this->isAtEnd()) {
             if ($this->peek() == "\n") {
                 $this->line++;
-                $this->advance();
             }
+            $this->advance();
         }
         if ($this->isAtEnd()) {
             NPHP::error($this->line, "String must be closed");
