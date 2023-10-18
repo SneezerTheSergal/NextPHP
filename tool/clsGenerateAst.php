@@ -3,22 +3,24 @@
 namespace tool;
 class GenerateAst
 {
-    public static function main($args) {
-        var_dump($args);
+    public static function main($args): void
+    {
         if (count($args) != 2) {
-            \merp\clsMain::error(1, "Usage: generateAst [output dir]");
+            \NextPHP\NPHP::error(1, "Usage: generateAst [output dir]");
             exit(64);
         }
         $outputDir = $args[1];
         self::defineAst($outputDir, "Expr", [
-            "Binary : Expr left, Token operator, Expr right",
+            "Binary : Expr left, clsToken operator, Expr right",
             "Grouping : Expr expression",
-            "Literal : Object Value",
-            "Unary : Token operator, Expr right"
+            "Literal : mixed Value",
+            "Unary : clsToken operator, Expr right"
         ]);
     }
 
-    private static function defineAst($outputDir, $baseName, $types) {
+    private static function defineAst($outputDir, $baseName, $types): void
+    {
+
         $path = $outputDir . "/" . $baseName . ".php";
         $fileContent = "<?php\n\n";
         $fileContent .= "namespace classes;\n";
@@ -26,31 +28,47 @@ class GenerateAst
         $fileContent .= "interface Accept {\n"; //accept method
         $fileContent .= "   public function accept(Visitor $" . "visitor);\n"; //accept function
         $fileContent .= "}\n\n";
-        $fileContent = self::defineVisitors($fileContent, $baseName, $types);
+        $fileContent .= self::defineVisitors($fileContent, $baseName, $types);
         $fileContent .= "abstract class " . $baseName . " {\n";
         $fileContent .= "}\n";
 
         foreach ($types as $type) {
-            $parts = explode(':',$type);
-            $classname = trim($parts[0]);
+            $parts = explode(':', $type);
+            $className = trim($parts[0]);
             $fields = trim($parts[1]);
-            $fileContent .= "\n    class " . $classname .  " extends " . $baseName . " implements Accept {\n";
-            $properties = explode(",", $fields);
-            foreach ($properties as $property) {
-                $propParts = explode(" ", $property);
-                $fileContent .= "       public $" . $propParts[1] . ";\n";
-            }
-            $fileContent .= "       public function accept(Visitor $" . "visitor) {\n";
-            $fileContent .= "           $" . "visitor->visit" . $classname . $baseName . "($" . "this);\n";
-            $fileContent .= "       }\n";
-            $fileContent .= "   }\n";
+            $fileContent .= self::defineType($baseName, $className, $fields);
         }
-
 
 
         file_put_contents($path,$fileContent);
     }
-    private static function defineVisitors($fileContent, $baseName, $types) {
+    private static function defineType($baseName, $className, $fields): string
+    {
+
+        $fileContent = "   class " . $className . " extends " . $baseName . " {\n";
+        $fieldList = explode(", ", $fields);
+        $varList = [];
+        foreach ($fieldList as $field) {
+            $nfield = explode(" ", $field);
+            $fileContent .= "       public " . $nfield[0] . " $" . $nfield[1] . ";\n";
+            array_push($varList, "$" . $nfield[1]);
+        }
+        $varList = implode(", ", $varList);
+        $fileContent .= "       public function __construct(" . $varList . ") {\n";
+
+        foreach ($fieldList as $field) {
+            $nfield = explode(" ", $field);
+            $fileContent .= "           $" . "this->" . $nfield[1] . "= " . "$" . $nfield[1] . ";\n";
+        }
+        $fileContent .= "       }\n";
+        $fileContent .= "       public function accept(Visitor $" . "visitor) {\n";
+        $fileContent .= "           return $" . "visitor->visit" . $className . $baseName . "($" . "this);\n";
+        $fileContent .= "       }\n";
+        $fileContent .= "   }\n\n";
+        return $fileContent;
+    }
+    private static function defineVisitors($fileContent, $baseName, $types): string
+    {
         $fileContent .= "   interface Visitor { \n";
         foreach ($types as $type) {
             $parts = explode(":", $type);

@@ -19,12 +19,9 @@ class NPHP
     {
         if (count($args) > 2) {
             echo "Usage: php /MyLang/interpreter.php name of script in runFiles\n"; //this is how you call stuff appearently
-            foreach ($args as $arg) {
+//            foreach ($args as $arg) {
 //                echo "debug: " . $arg . "\n";
-                debug(\DebugModes::ECHO, $arg, null);
-            }
-            debug(\DebugModes::COUNT, $args, null);
-
+//            }
             exit(64);
         } elseif (count($args) === 2) { //args = file name, can't be more than 1 at a time.
             self::runFile(self::RUN_PATH . $args[1]);
@@ -37,8 +34,6 @@ class NPHP
         try {
             $bytes = file_get_contents($path);
             self::run($bytes);
-            debug(\DebugModes::DUMP, $bytes, null);
-            debug(\DebugModes::ECHO, null, "file went through"); //unnecessarily long debug func
             if (self::$hadError) {
                 exit(65);
             }
@@ -67,14 +62,18 @@ class NPHP
     {
         //debug(\DebugModes::DUMP, $source, null);
         $clsScanner= new clsScanner($source); // source seems to not be given to clsScanner
-        echo " starting the scanning process... \n";
+        $startTime = microtime(true);
+        echo "[" . current_time() . "] starting the scanning process... \n";
         $tokens[] = $clsScanner->scanTokens();
-        echo " scanned tokens! \n";
+        $endTime = microtime(true);
+        echo "[" . current_time() . "] scanned tokens! \n";
+        echo "total scanning time: " . ($endTime - $startTime) . "\n\n";
 
         foreach ($tokens as $token) {
             foreach ($token as $tokens) {
                 var_dump($tokens);
             }
+
 
         }
 

@@ -25,3 +25,9 @@ enum DebugModes
     case COUNT;
 }
 
+function current_time(): string
+{
+    $date = new DateTime();
+    return $date->format("H:i:s");
+}
+
